@@ -37,7 +37,7 @@ public class MainEntry {
 		System.out.println(">> (7) Exit");
 	}
 
-	public void parseCommands() {
+	public void mainCommands() {
 
 		int inputId;
 		System.out.print("please input the number of your option: ");
@@ -92,7 +92,7 @@ public class MainEntry {
 		// Continuously check the user input, until user exit.
 		while (!test.exit) {
 			test.printWelcome();
-			test.parseCommands();
+			test.mainCommands();
 		}
 
 	}

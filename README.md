@@ -1,7 +1,7 @@
 This project is created for a command line toDoly application, the user will
 use this application to maintain a list of tasks, one can do some operations of the tasks from the command line interface:
 (1) Show Task List by date
-(2) Show Task List by project)
+(2) Show Task List by project
 (3) Add New Task
 (4) Edit Task
 (5) Remove Task

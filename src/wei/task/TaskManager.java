@@ -5,7 +5,6 @@
  */
 package wei.task;
 
-//import java.util.ArrayList;
 import java.util.*;
 import java.io.*;
 
@@ -22,16 +21,16 @@ public class TaskManager {
 	 * Constructor for objects of class TaskManager
 	 */
 	public TaskManager() {
-		// initialise instance variables
 		taskList = new ArrayList<Task>();
 		reader = new Scanner(System.in);
 	}
 
 	/**
-	 * An example of a method - replace this comment with your own
-	 *
-	 * @param y a sample parameter for a method
-	 * @return the sum of x and y
+	 * add a task to the arraylist,user can define task name,project name. 
+	 * Status has a default value "undo",system specify "taskCounter" as the
+	 * default taskId,
+	 * @param no parameter
+	 * @return void
 	 */
 	public void addTask() {
 		// put your code here
@@ -63,7 +62,12 @@ public class TaskManager {
 			printTask(t);
 		}
 	}
-
+	/**
+	 * edit a task of the arraylist,user can modify task name, project,and change status, 
+	 * due time
+	 * @param no parameter
+	 * @return void
+	 */
 	public void EditTask() {
 		String inputLine;
 		int inputId;
@@ -103,11 +107,20 @@ public class TaskManager {
 		}
 
 	}
-
+	/**
+	 * sort task list by create time
+	 * 
+	 * @param no parameter
+	 * @return void
+	 */
 	public void sortByTime() {
 		taskList.sort(Comparator.comparing(Task::getCreatTime));
 	}
-
+	
+	/**
+	 * delete a task from the list, user can specify the task id as an index
+	 *
+	 */
 	public void removeTask() {
 		int inputId;
 		boolean exist = false;
@@ -133,6 +146,10 @@ public class TaskManager {
 
 	}
 
+	/**
+	 * read objects from a file, use java Serializable to implement reading objects
+	 * from a binary file.
+	 */
 	public boolean loadTaskListFromFile(String fileName) {
 		taskList.clear();
 		ObjectInputStream objReader = null;
@@ -167,6 +184,10 @@ public class TaskManager {
 		return true;
 	}
 
+	/**
+	 * read objects from a file, use java Serializable to implement writing objects
+	 * from a binary file.
+	 */
 	public boolean SaveTaskListToFile(String fileName) throws IOException {
 		ObjectOutputStream objWriter = null;
 		try {
@@ -186,8 +207,6 @@ public class TaskManager {
 
 	public void filterByProject() {
 
-		// taskList.stream().mapToInt(t ->
-		// t.getTaskId()).max().orElseThrow(NoSuchElementException::new)
 		String projectName;
 		System.out.println("please input the project name you want to filter!");
 		projectName = reader.next();
@@ -201,11 +220,17 @@ public class TaskManager {
 	public void statusCheck() {
 
 	}
-
+	/**
+	 * use java stream to get the undo tasks number
+	 * 
+	 */
 	public int getUndoTaskNum() {
 		return (int) taskList.stream().filter(t -> t.getStatus().toLowerCase().compareTo("undo") == 0).count();
 	}
-
+	/**
+	 * use java stream to get the complete tasks number
+	 * 
+	 */
 	public int getDoneTaskNum() {
 		return (int) taskList.stream().filter(t -> t.getStatus().toLowerCase().compareTo("done") == 0).count();
 	}

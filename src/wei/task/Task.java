@@ -29,11 +29,7 @@ public class Task implements Serializable {
 	/**
 	 * Constructor for objects of class Task
 	 */
-	public Task() {
-		// initialise instance variables
-		creatTime = LocalDateTime.now();
-	}
-
+	
 	public Task(int id) {
 		// initialise instance variables
 		taskId = id;
@@ -41,12 +37,7 @@ public class Task implements Serializable {
 		creatTime = LocalDateTime.now();
 	}
 
-	/**
-	 * An example of a method - replace this comment with your own
-	 *
-	 * @param y a sample parameter for a method
-	 * @return the sum of x and y
-	 */
+	
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
