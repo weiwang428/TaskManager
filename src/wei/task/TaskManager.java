@@ -7,6 +7,7 @@ package wei.task;
 
 import java.util.*;
 import java.io.*;
+import java.time.LocalDateTime;
 
 /**
  * @author Wei Wang
@@ -26,23 +27,18 @@ public class TaskManager {
 	}
 
 	/**
-	 * add a task to the arraylist,user can define task name,project name. 
-	 * Status has a default value "undo",system specify "taskCounter" as the
-	 * default taskId,
+	 * add a task to the arraylist,user can define task name,project name. Status
+	 * has a default value "undo",system specify "taskCounter" as the default
+	 * taskId,
+	 * 
 	 * @param no parameter
 	 * @return void
 	 */
-	public void addTask() {
-		// put your code here
-		String inputLine;
-		Task tempTask = new Task(taskCounter++);
-		System.out.println("please input task name");
-		inputLine = reader.nextLine();
-		tempTask.setTaskName(inputLine);
-		System.out.println("please input project name");
-		inputLine = reader.nextLine();
-		tempTask.setProject(inputLine);
-		taskList.add(tempTask);
+	public void addTask(Task task) {
+		if (task != null) {
+			task.setTaskId(taskCounter++);
+			taskList.add(task);
+		}
 	}
 
 	public void printTask(Task task) {
@@ -53,6 +49,7 @@ public class TaskManager {
 		System.out.println("task project: " + task.getProject());
 		System.out.println("task status: " + task.getStatus());
 		System.out.println("task create time: " + task.getCreatTime());
+		System.out.println("task due time: " + task.getDueTime());
 		System.out.println("-----------------------------------------------");
 	}
 
@@ -62,9 +59,20 @@ public class TaskManager {
 			printTask(t);
 		}
 	}
+
+	public Task getTaskById(int inputId) {
+		for (Task t : taskList) {
+			if (t.getTaskId() == inputId) {
+				return t;
+			}
+		}
+		return null;
+	}
+
 	/**
-	 * edit a task of the arraylist,user can modify task name, project,and change status, 
-	 * due time
+	 * edit a task of the arraylist,user can modify task name, project,and change
+	 * status, due time
+	 * 
 	 * @param no parameter
 	 * @return void
 	 */
@@ -107,41 +115,33 @@ public class TaskManager {
 		}
 
 	}
+
 	/**
 	 * sort task list by create time
 	 * 
-	 * @param no parameter
+	 * @param String
 	 * @return void
 	 */
 	public void sortByTime() {
 		taskList.sort(Comparator.comparing(Task::getCreatTime));
 	}
-	
+
 	/**
 	 * delete a task from the list, user can specify the task id as an index
 	 *
 	 */
-	public void removeTask() {
-		int inputId;
+	public void removeTask(int inputId) {
 		boolean exist = false;
-		System.out.println("please input the task ID you want to delete");
-		try {
-			inputId = reader.nextInt();
-
-			for (Task t : taskList) {
-				if (t.getTaskId() == inputId) {
-					taskList.remove(inputId);
-				}
+		for (Task t : taskList) {
+			if (t.getTaskId() == inputId) {
 				exist = true;
+				taskList.remove(t);
 				break;
 			}
-			if (!exist) {
-				System.out.println("there is no such a task");
-			}
+		}
 
-		} catch (Exception e) {
-
-			System.out.println("please input a legal task ID,task ID shold be an integer");
+		if (!exist) {
+			System.out.println("there is no such a task");
 		}
 
 	}
@@ -205,11 +205,7 @@ public class TaskManager {
 		return true;
 	}
 
-	public void filterByProject() {
-
-		String projectName;
-		System.out.println("please input the project name you want to filter!");
-		projectName = reader.next();
+	public void filterByProject(String projectName) {
 		for (Task t : taskList) {
 			if (t.getProject().equals(projectName)) {
 				printTask(t);
@@ -220,6 +216,7 @@ public class TaskManager {
 	public void statusCheck() {
 
 	}
+
 	/**
 	 * use java stream to get the undo tasks number
 	 * 
@@ -227,6 +224,7 @@ public class TaskManager {
 	public int getUndoTaskNum() {
 		return (int) taskList.stream().filter(t -> t.getStatus().toLowerCase().compareTo("undo") == 0).count();
 	}
+
 	/**
 	 * use java stream to get the complete tasks number
 	 * 

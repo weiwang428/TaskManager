@@ -13,20 +13,19 @@ import java.util.Scanner;
  */
 public class MainEntry {
 	private Scanner reader;
-	private static String fileName = "taskList.bin";
-	private TaskManager taskManager;
+	private TaskController taskController;
 	private boolean exit;
 
 	public MainEntry() {
 		reader = new Scanner(System.in);
-		taskManager = new TaskManager();
-		taskManager.loadTaskListFromFile(MainEntry.fileName);
+		this.taskController = new TaskController();
 	}
 
 	public void printWelcome() {
+		System.out.println("****************************************************");
 		System.out.println(">> Welcome to TaskManager");
-		System.out.print(">> You have " + taskManager.getUndoTaskNum() + " tasks to do");
-		System.out.println(" and " + taskManager.getDoneTaskNum() + " tasks are done!");
+		System.out.print(">> You have " + this.taskController.getUndoTaskNumber() + " tasks to do");
+		System.out.println(" and " + this.taskController.getDoneTaskNumber() + " tasks are done!");
 		System.out.println(">> Pick an option:");
 		System.out.println(">> (1) Show Task List by date");
 		System.out.println(">> (2) Show Task List by project");
@@ -35,6 +34,7 @@ public class MainEntry {
 		System.out.println(">> (5) Remove a Task");
 		System.out.println(">> (6) Save");
 		System.out.println(">> (7) Exit");
+		System.out.println("****************************************************");
 	}
 
 	public void mainCommands() {
@@ -45,40 +45,27 @@ public class MainEntry {
 
 		switch (inputId) {
 		case 1:
-			taskManager.sortByTime();
-			taskManager.printTaskList();
+			this.taskController.showTaskByTime();
 			break;
 		case 2:
-			taskManager.filterByProject();
+			this.taskController.filterAProject();
 			break;
 		case 3:
-			taskManager.addTask();
+			this.taskController.addTask();
 			break;
 		case 4:
-			taskManager.EditTask();
+			this.taskController.EditTask();
 			break;
 		case 5:
-			taskManager.removeTask();
+			this.taskController.removeTask();
 			break;
 		case 6:
-			try {
-				taskManager.SaveTaskListToFile(MainEntry.fileName);
-			} catch (Exception e) {
-				System.out.println(
-						"Can not save the current task list from the file! The error information is showing below:");
-				e.printStackTrace();
-			}
+			this.taskController.saveTaskList();
 			break;
 		case 7:
 			this.exit = true;
 			// save the task list before exit all the time.
-			try {
-				taskManager.SaveTaskListToFile(MainEntry.fileName);
-			} catch (Exception e) {
-				System.out.println(
-						"Can not save the current task list from the file! The error information is showing below:");
-				e.printStackTrace();
-			}
+			this.taskController.saveTaskList();
 			break;
 		default:
 			System.out.println("This is not a valid option, please input 1 ~ 7.");
