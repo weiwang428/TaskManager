@@ -35,14 +35,11 @@ public class MainEntry {
 		System.out.println(">> (6) Save");
 		System.out.println(">> (7) Exit");
 		System.out.println("****************************************************");
+		System.out.println("                                                    ");
 	}
 
 	public void mainCommands() {
-
-		int inputId;
-		System.out.print("please input the number of your option: ");
-		inputId = reader.nextInt();
-
+		int inputId = taskController.getInt("Please input the number of your option: ", "You must input an integer!");
 		switch (inputId) {
 		case 1:
 			this.taskController.showTaskByTime();
@@ -65,7 +62,7 @@ public class MainEntry {
 		case 7:
 			this.exit = true;
 			// save the task list before exit all the time.
-			this.taskController.saveTaskList();
+			//this.taskController.saveTaskList();
 			break;
 		default:
 			System.out.println("This is not a valid option, please input 1 ~ 7.");

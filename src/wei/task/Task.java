@@ -32,21 +32,33 @@ public class Task implements Serializable {
 	 */
 
 	public Task() {
-		// initialise instance variables
+		// initialize instance variables
 		status = "undo";
 		creatTime = LocalDateTime.now();
 	}
-
+	/**
+     * Constructs an empty list with the specified initial capacity.
+     *
+     * @param  initialCapacity  the initial capacity of the list
+     * @throws IllegalArgumentException if the specified initial capacity
+     *         is negative
+     */
 	public Task(int id) {
-		// initialise instance variables
+		// initialize instance variables
 		taskId = id;
 		status = "undo";
 		creatTime = LocalDateTime.now();
 	}
-
+	
+	 /**
+     * set task name to a task, task name can not be null or space, 
+     *
+     * @param taskName input a non-empty string as task name
+     * @throws IllegalArgumentException {@inheritDoc}
+     */
 	public void setTaskName(String taskName) {
 		if (taskName.trim().isEmpty()) {
-			throw new IllegalArgumentException("task name can not be empty!");
+			throw new IllegalArgumentException("Task name can not be empty!");
 		}
 		this.taskName = taskName.trim();
 	}
@@ -54,12 +66,18 @@ public class Task implements Serializable {
 	public String getTaskName() {
 		return this.taskName;
 	}
-
-	public void setProject(String project) {
-		if (project.trim().isEmpty()) {
-			throw new IllegalArgumentException("project can not be empty!");
+	
+	/**
+     * set project name to a task, project name can not be null or space, 
+     *
+     * @param projectName input a non-empty string as project name
+     * @throws IllegalArgumentException {@inheritDoc}
+     */
+	public void setProject(String projectName) {
+		if (projectName.trim().isEmpty()) {
+			throw new IllegalArgumentException("Project can not be empty!");
 		}
-		this.project = project.trim();
+		this.project = projectName.trim();
 	}
 
 	public String getProject() {

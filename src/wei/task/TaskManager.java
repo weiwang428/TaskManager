@@ -5,9 +5,11 @@
  */
 package wei.task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.io.*;
-import java.time.LocalDateTime;
 
 /**
  * @author Wei Wang
@@ -31,7 +33,7 @@ public class TaskManager {
 	 * has a default value "undo",system specify "taskCounter" as the default
 	 * taskId,
 	 * 
-	 * @param no parameter
+	 * @param task a new task to be added to
 	 * @return void
 	 */
 	public void addTask(Task task) {
@@ -42,7 +44,6 @@ public class TaskManager {
 	}
 
 	public void printTask(Task task) {
-		// put your code here
 		System.out.println("-----------------------------------------------");
 		System.out.println("task ID: " + task.getTaskId());
 		System.out.println("task name: " + task.getTaskName());
@@ -51,22 +52,13 @@ public class TaskManager {
 		System.out.println("task create time: " + task.getCreatTime());
 		System.out.println("task due time: " + task.getDueTime());
 		System.out.println("-----------------------------------------------");
+		System.out.println("                                               ");
 	}
 
 	public void printTaskList() {
-		// put your code here
 		for (Task t : taskList) {
 			printTask(t);
 		}
-	}
-
-	public Task getTaskById(int inputId) {
-		for (Task t : taskList) {
-			if (t.getTaskId() == inputId) {
-				return t;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -76,44 +68,13 @@ public class TaskManager {
 	 * @param no parameter
 	 * @return void
 	 */
-	public void EditTask() {
-		String inputLine;
-		int inputId;
-		System.out.println("please input the task ID you want to edit");
-		inputId = reader.nextInt();
-		boolean exist = false;
+	public Task getTaskById(int inputId) {
 		for (Task t : taskList) {
 			if (t.getTaskId() == inputId) {
-				System.out.println("if you want to edit task name,print yes");
-				inputLine = reader.nextLine();
-				if (inputLine.equals("yes")) {
-					System.out.println("please input task name");
-					inputLine = reader.nextLine();
-					t.setTaskName(inputLine);
-				}
-				System.out.println("if you want to edit project name,print yes");
-				inputLine = reader.nextLine();
-				if (inputLine.equals("yes")) {
-					System.out.println("please input task name");
-					inputLine = reader.nextLine();
-					t.setProject(inputLine);
-				}
-				System.out.println("if you want to edit task status,print yes");
-				inputLine = reader.nextLine();
-				if (inputLine.equals("yes")) {
-					System.out.println("please input status,like 'undo','done'");
-					inputLine = reader.nextLine();
-					t.setStatus(inputLine);
-				}
-
-				exist = true;
-				break;
-			}
-			if (!exist) {
-				System.out.println("there is no such a task");
+				return t;
 			}
 		}
-
+		return null;
 	}
 
 	/**
@@ -131,29 +92,22 @@ public class TaskManager {
 	 *
 	 */
 	public void removeTask(int inputId) {
-		boolean exist = false;
 		for (Task t : taskList) {
 			if (t.getTaskId() == inputId) {
-				exist = true;
 				taskList.remove(t);
-				break;
+				return;
 			}
 		}
-
-		if (!exist) {
-			System.out.println("there is no such a task");
-		}
-
+		System.out.println("there is no such a task");
 	}
 
 	/**
 	 * read objects from a file, use java Serializable to implement reading objects
 	 * from a binary file.
 	 */
-	public boolean loadTaskListFromFile(String fileName) {
+	public boolean loadTaskListFromFile(String fileName) throws IOException {
 		taskList.clear();
 		ObjectInputStream objReader = null;
-
 		try {
 			objReader = new ObjectInputStream(new FileInputStream(fileName));
 			// Read the line until end of the file.
@@ -163,7 +117,7 @@ public class TaskManager {
 				newObj = objReader.readObject();
 			}
 		} catch (EOFException e) {
-
+			objReader.close();
 		} catch (FileNotFoundException e) {
 			System.out.println(String.format("File: %s does not exist!", fileName));
 			return false;
@@ -171,10 +125,7 @@ public class TaskManager {
 			System.out.println(String.format("Error happen when reading from file: %s, error message is: %s", fileName,
 					e.getMessage()));
 			return false;
-		} finally {
-			// objReader.close();
 		}
-
 		// Always put the task_counter to the maximum task id which we load from the
 		// file, and then increment it to hold the next task id.
 		taskCounter = taskList.size() > 0
