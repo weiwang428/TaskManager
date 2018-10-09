@@ -1,40 +1,46 @@
-/**
- * This class is the Task Manager which maintain a list of Tasks, it provides
- * the user with some manipulation of the list, e.g. add new task, update a task,
- * print the task, remove a task, etc.
- */
 package wei.task;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.io.*;
+import java.util.stream.Collectors;
 
 /**
+ * This class is the Task Manager which maintains a list of {@link Task}, it
+ * provides some functions to manipulate the task list, e.g. add a new task,
+ * print the task list, update a task, remove a task, etc.
+ * 
  * @author Wei Wang
- *
+ * @version 1.0
+ * 
  */
 public class TaskManager {
-	private ArrayList<Task> taskList;
-	private Scanner reader;
+	private List<Task> taskList;
 	private static int taskCounter;
 
 	/**
-	 * Constructor for objects of class TaskManager
+	 * Constructor for objects of class TaskManager, initialize an empty list of
+	 * task.
 	 */
 	public TaskManager() {
 		taskList = new ArrayList<Task>();
-		reader = new Scanner(System.in);
 	}
 
 	/**
-	 * add a task to the arraylist,user can define task name,project name. Status
-	 * has a default value "undo",system specify "taskCounter" as the default
-	 * taskId,
+	 * The addTask method enables user to add tasks to the TaskManager.
 	 * 
-	 * @param task a new task to be added to
-	 * @return void
+	 * @param task A new task to be added, if the task is null, nothing will be
+	 *             added
+	 * @see Task
+	 * 
 	 */
 	public void addTask(Task task) {
 		if (task != null) {
@@ -43,18 +49,11 @@ public class TaskManager {
 		}
 	}
 
-	public void printTask(Task task) {
-		System.out.println("-----------------------------------------------");
-		System.out.println("task ID: " + task.getTaskId());
-		System.out.println("task name: " + task.getTaskName());
-		System.out.println("task project: " + task.getProject());
-		System.out.println("task status: " + task.getStatus());
-		System.out.println("task create time: " + task.getCreatTime());
-		System.out.println("task due time: " + task.getDueTime());
-		System.out.println("-----------------------------------------------");
-		System.out.println("                                               ");
-	}
-
+	/**
+	 * The printTaskList method will print all the tasks with details information to
+	 * the console.
+	 * 
+	 */
 	public void printTaskList() {
 		for (Task t : taskList) {
 			printTask(t);
@@ -62,11 +61,23 @@ public class TaskManager {
 	}
 
 	/**
-	 * edit a task of the arraylist,user can modify task name, project,and change
-	 * status, due time
+	 * Print all the current available project names to the console, if the
+	 * TaskManager is empty, nothing will be print.
 	 * 
-	 * @param no parameter
-	 * @return void
+	 */
+	public void printProjectNames() {
+		if (taskList.size() == 0) {
+			System.out.print("The current available project names are: ");
+			System.out.println(taskList.stream().map(t -> t.getProject()).distinct().collect(Collectors.joining(", ")));
+		}
+	}
+
+	/**
+	 * The getTaskById method will return a task with a specified id to the user.
+	 * 
+	 * @param inputId the task id which user wants to search for.
+	 * @return return a task instance with the specified id, if the task isn't
+	 *         found, return null
 	 */
 	public Task getTaskById(int inputId) {
 		for (Task t : taskList) {
@@ -78,18 +89,20 @@ public class TaskManager {
 	}
 
 	/**
-	 * sort task list by create time
+	 * The sortByTime method will sort all the tasks by the task's create time in a
+	 * ascending order.
 	 * 
-	 * @param String
-	 * @return void
 	 */
 	public void sortByTime() {
 		taskList.sort(Comparator.comparing(Task::getCreatTime));
 	}
 
 	/**
-	 * delete a task from the list, user can specify the task id as an index
+	 * The removeTask method enables user to remove a task from the TaskManager with
+	 * a given task id, if no task is found with the given task id, then a prompt
+	 * will be printed to the user.
 	 *
+	 * @param inputId the task id which user want to remove.
 	 */
 	public void removeTask(int inputId) {
 		for (Task t : taskList) {
@@ -102,22 +115,29 @@ public class TaskManager {
 	}
 
 	/**
-	 * read objects from a file, use java Serializable to implement reading objects
-	 * from a binary file.
+	 * The loadTaskListFromFile method will read tasks from the given file, The file
+	 * is expected to be in a binary format with all the tasks written by the
+	 * {@link #SaveTaskListToFile(String)} object.
+	 * 
+	 * @param fileName File name of the binary file which contains the saved tasks
+	 * @return {@code true} if the reading is successful
+	 * @throws IOException error when the reading fails
 	 */
 	public boolean loadTaskListFromFile(String fileName) throws IOException {
-		taskList.clear();
+		// use java Serializable to implement reading objects from a binary file.
 		ObjectInputStream objReader = null;
 		try {
 			objReader = new ObjectInputStream(new FileInputStream(fileName));
-			// Read the line until end of the file.
+			// Clear all the current tasks from the list.
+			taskList.clear();
+			// Read the task object until end of the file is reached.
 			Object newObj = objReader.readObject();
 			while (newObj != null) {
 				taskList.add((Task) newObj);
 				newObj = objReader.readObject();
 			}
 		} catch (EOFException e) {
-			objReader.close();
+			// Nothing needs to be done when we met end of line.
 		} catch (FileNotFoundException e) {
 			System.out.println(String.format("File: %s does not exist!", fileName));
 			return false;
@@ -125,19 +145,26 @@ public class TaskManager {
 			System.out.println(String.format("Error happen when reading from file: %s, error message is: %s", fileName,
 					e.getMessage()));
 			return false;
+		} finally {
+			objReader.close();
 		}
 		// Always put the task_counter to the maximum task id which we load from the
 		// file, and then increment it to hold the next task id.
 		taskCounter = taskList.size() > 0
 				? taskList.stream().mapToInt(t -> t.getTaskId()).max().orElseThrow(NoSuchElementException::new)
-				: 0;
+				: -1;
 		taskCounter++;
 		return true;
 	}
 
 	/**
-	 * read objects from a file, use java Serializable to implement writing objects
-	 * from a binary file.
+	 * The SaveTaskListToFile method will write the task list to the file with
+	 * binary format, it can be loaded by the {@link #loadTaskListFromFile(String)}
+	 * method.
+	 * 
+	 * @param fileName file name of the binary file which contains the saved list
+	 * @return {@code true} if the writing is successful
+	 * @throws IOException error when writing fails
 	 */
 	public boolean SaveTaskListToFile(String fileName) throws IOException {
 		ObjectOutputStream objWriter = null;
@@ -156,20 +183,31 @@ public class TaskManager {
 		return true;
 	}
 
-	public void filterByProject(String projectName) {
+	/**
+	 * The printTaskByFilterProject will show tasks by a project name, if none of
+	 * the task belongs to the given project name, then an error message will be
+	 * printed to the console.
+	 *
+	 * @param projectName the project name which user want to search for the
+	 *                    printing.
+	 */
+	public void printTaskByFilterProject(String projectName) {
+		boolean ifExist = false;
 		for (Task t : taskList) {
 			if (t.getProject().equals(projectName)) {
 				printTask(t);
+				ifExist = true;
 			}
+		}
+		if (!ifExist) {
+			System.out.println(String.format("There is no task has a project name: %s.", projectName));
 		}
 	}
 
-	public void statusCheck() {
-
-	}
-
 	/**
-	 * use java stream to get the undo tasks number
+	 * Return the number of the undo tasks in the TaskManager.
+	 * 
+	 * @return The number of the undo tasks in the TaskManager.
 	 * 
 	 */
 	public int getUndoTaskNum() {
@@ -177,11 +215,28 @@ public class TaskManager {
 	}
 
 	/**
-	 * use java stream to get the complete tasks number
+	 * Return the number of the done tasks in the TaskManager.
+	 * 
+	 * @return The number of the done tasks in the TaskManager.
 	 * 
 	 */
 	public int getDoneTaskNum() {
 		return (int) taskList.stream().filter(t -> t.getStatus().toLowerCase().compareTo("done") == 0).count();
 	}
 
+	/**
+	 * Print the details information of a task to the console.
+	 * 
+	 * @param task Task which the user wants to print
+	 */
+	private void printTask(Task task) {
+		System.out.println("-----------------------------------------------");
+		System.out.println("task ID: " + task.getTaskId());
+		System.out.println("task name: " + task.getTaskName());
+		System.out.println("task project: " + task.getProject());
+		System.out.println("task status: " + task.getStatus());
+		System.out.println("task create time: " + task.getCreatTime());
+		System.out.println("task due time: " + task.getDueTime());
+		System.out.println("-----------------------------------------------\n");
+	}
 }

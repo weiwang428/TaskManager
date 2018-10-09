@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"wei.task","l":"Controller"},{"p":"wei.task","l":"MainEntry"},{"p":"wei.task","l":"Task"},{"p":"wei.task","l":"TaskManager"}]

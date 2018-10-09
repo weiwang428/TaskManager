@@ -1,26 +1,27 @@
-/**
- * This is the main class which contains the application entry point (main), it
- * will interact with the user, and provide a command line interface to manager
- * the todo list, and also do some operation of the list.
- */
 package wei.task;
 
-import java.util.Scanner;
-
 /**
+ * This is the main class which contains the application entry point (main), it
+ * will interact with the user, and provide a command line interface to manage
+ * the task list, and also do some operation of the list.
+ * 
  * @author Wei Wang
- *
+ * @version 1.0
  */
 public class MainEntry {
-	private Scanner reader;
-	private TaskController taskController;
+	private Controller taskController;
 	private boolean exit;
 
+	/**
+	 * Constructs a TaskController instance.
+	 */
 	public MainEntry() {
-		reader = new Scanner(System.in);
-		this.taskController = new TaskController();
+		this.taskController = new Controller();
 	}
 
+	/**
+	 * Print welcome information to the user.
+	 */
 	public void printWelcome() {
 		System.out.println("****************************************************");
 		System.out.println(">> Welcome to TaskManager");
@@ -34,10 +35,12 @@ public class MainEntry {
 		System.out.println(">> (5) Remove a Task");
 		System.out.println(">> (6) Save");
 		System.out.println(">> (7) Exit");
-		System.out.println("****************************************************");
-		System.out.println("                                                    ");
+		System.out.println("****************************************************\n");
 	}
 
+	/**
+	 * Main commands processing, handling various of user input.
+	 */
 	public void mainCommands() {
 		int inputId = taskController.getInt("Please input the number of your option: ", "You must input an integer!");
 		switch (inputId) {
@@ -60,9 +63,10 @@ public class MainEntry {
 			this.taskController.saveTaskList();
 			break;
 		case 7:
+			System.out.println("Thank you for comeing, Bye!");
 			this.exit = true;
 			// save the task list before exit all the time.
-			//this.taskController.saveTaskList();
+			this.taskController.saveTaskList();
 			break;
 		default:
 			System.out.println("This is not a valid option, please input 1 ~ 7.");
@@ -71,6 +75,12 @@ public class MainEntry {
 
 	}
 
+	/**
+	 * Application entry point.
+	 * 
+	 * @param args not used for this application.
+	 * 
+	 */
 	public static void main(String[] args) {
 		MainEntry test = new MainEntry();
 		// Continuously check the user input, until user exit.
@@ -78,7 +88,6 @@ public class MainEntry {
 			test.printWelcome();
 			test.mainCommands();
 		}
-
 	}
 
 }
