@@ -63,7 +63,7 @@ public class MainEntry {
 			this.taskController.saveTaskList();
 			break;
 		case 7:
-			System.out.println("Thank you for comeing, Bye!");
+			System.out.println("Thank you for coming, Bye!");
 			this.exit = true;
 			// save the task list before exit all the time.
 			this.taskController.saveTaskList();

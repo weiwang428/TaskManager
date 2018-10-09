@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
@@ -66,7 +67,7 @@ public class TaskManager {
 	 * 
 	 */
 	public void printProjectNames() {
-		if (taskList.size() == 0) {
+		if (taskList.size() > 0) {
 			System.out.print("The current available project names are: ");
 			System.out.println(taskList.stream().map(t -> t.getProject()).distinct().collect(Collectors.joining(", ")));
 		}
@@ -230,13 +231,15 @@ public class TaskManager {
 	 * @param task Task which the user wants to print
 	 */
 	private void printTask(Task task) {
+		// Use a proper format to output the date/time information of the Task.
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		System.out.println("-----------------------------------------------");
 		System.out.println("task ID: " + task.getTaskId());
 		System.out.println("task name: " + task.getTaskName());
 		System.out.println("task project: " + task.getProject());
 		System.out.println("task status: " + task.getStatus());
-		System.out.println("task create time: " + task.getCreatTime());
-		System.out.println("task due time: " + task.getDueTime());
+		System.out.println("task create time: " + task.getCreatTime().format(df));
+		System.out.println("task due time: " + task.getDueTime().format(df));
 		System.out.println("-----------------------------------------------\n");
 	}
 }
