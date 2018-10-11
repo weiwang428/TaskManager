@@ -1,10 +1,10 @@
 This project is created for a command line task manager application, 
 the user will use this application to maintain a list of tasks, one 
 can do some operations of the tasks from the command line interface:
->> (1) Show Task List by date
->> (2) Show Task List by project
->> (3) Add a New Task
->> (4) Edit a Task
+## >> (1) Show Task List by date
+## >> (2) Show Task List by project
+## >> (3) Add a New Task
+# >> (4) Edit a Task
 >> (5) Remove a Task
 >> (6) Save
 >> (7) Exit
