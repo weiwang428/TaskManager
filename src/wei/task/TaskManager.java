@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class TaskManager {
 	private List<Task> taskList;
-	private static int taskCounter;
+	private int taskCounter;
 
 	/**
 	 * Constructor for objects of class TaskManager, initialize an empty list of
