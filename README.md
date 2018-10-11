@@ -1,24 +1,11 @@
-This project is created for a command line task manager application, 
-the user will use this application to maintain a list of tasks, one 
-can do some operations of the tasks from the command line interface:
->> (1) Show Task List by date
->> (2) Show Task List by project
->> (3) Add a New Task
->> (4) Edit a Task
->> (5) Remove a Task
->> (6) Save
->> (7) Exit
+## Introduction
+This project is what the author has in the KTH study as a individual project, it is created as a command line task manager application, the user can use this application to maintain a list of tasks, one can do necessary operations of the task list from the command line interface, it will also save the task list to a file, and reload the file next time when the user starts the program.
 
-User choose one of the operations from the above list, it basically 
-contains: show the current list, add new task, update an existing 
-task or remove an existing task. User can save all the data in a 
-binary file, when the application starts up, it will automatically
-load the existing task lists from the file. User can save the task 
-list at any time by choosing command 6, when the application exits, 
-it will also save the current tasks to file.
+## How to use 
+This repo contains both the source code file of the project and also the documentations, user manual and generated jar file. The project is written in Java language, and with eclipse as the IDE, one can directly download the complete repo, and open with eclipse, to only download a runable jar file, one can find the file: taskManager.jar in the root directory of the repo. a short manual can be found in the ./doc folder, and also javadoc files.
 
+## Bug report
+If you meet a bug, and you want the author to fix it, please send a mail to author: Wei Wang (vivi666.wang@gmail.com)
 
-Author: Wei Wang (vivi666.wang@gmail.com)
-
-Revision History: 
-2018-10-09:	1st version implementation.
+## Revision History
+2018-10-11:   1st revision implementation of the task.
