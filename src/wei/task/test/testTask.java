@@ -1,11 +1,10 @@
 /**
  * 
  */
-package wei.task;
+package wei.task.test;
 
+import wei.task.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -20,7 +19,7 @@ import org.junit.rules.ExpectedException;
  *
  */
 public class testTask {
-
+	Task t;
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -40,6 +39,7 @@ public class testTask {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		t = new Task();
 	}
 
 	/**
@@ -53,8 +53,7 @@ public class testTask {
 	public ExpectedException thrown = ExpectedException.none();
 	
 	@Test
-	public void testSetTaskName() {
-		Task t = new Task();
+	public void testSetTaskName() {		
 		try {
 			t.setTaskName(null);
 			Assert.fail("Failure of testing setTaskNme");
@@ -71,7 +70,6 @@ public class testTask {
 	
 	@Test
 	public void testGetTaskName() {
-		Task t = new Task();
 		try {
 			t.getTaskName();
 			Assert.fail("Failure of testing getTaskNme");
@@ -84,7 +82,6 @@ public class testTask {
 	
 	@Test
 	public void testSetProject() {
-		Task t = new Task();
 		try {
 			t.setProject(null);
 			Assert.fail("Failure of testing setProject");
@@ -102,7 +99,6 @@ public class testTask {
 	
 	@Test
 	public void testGetProject() {
-		Task t = new Task();
 		try {
 			t.getProject();
 			Assert.fail("Failure of testing getProject");
@@ -115,7 +111,6 @@ public class testTask {
 
 	@Test
 	public void testStatus() {
-		Task t = new Task();
 		try {
 			t.setStatus(null);
 			Assert.fail("Failure of testing setStatus");
@@ -140,8 +135,6 @@ public class testTask {
 	
 	@Test
 	public void testSetDueTime() {
-		Task t = new Task();
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		try {
 			t.setDueTime(null);
 			Assert.fail("Failure of testing setDueTime");
@@ -149,19 +142,7 @@ public class testTask {
 			
 		}
 		try {
-			t.setDueTime(" ");
-			Assert.fail("Failure of testing setDueTime");
-		} catch (IllegalArgumentException e) {
-
-		}	
-		try {
-			t.setDueTime("2018-11-1111");
-			Assert.fail("Failure of testing setDueTime");
-		} catch (IllegalArgumentException e) {
-
-		}
-		try {
-			t.setDueTime(t.getCreatTime().minusDays(1).format(df));
+			t.setDueTime(t.getCreatTime().minusDays(1));
 			Assert.fail("Failure of testing setDueTime");
 		} catch (IllegalArgumentException e) {
 
@@ -171,30 +152,25 @@ public class testTask {
 	
 	@Test
 	public void testGetDueTime() {
-		Task t = new Task();
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime time = LocalDateTime.now().plusDays(1);
-		time = time.minusNanos(time.getNano());
 		try {
 			t.getDueTime();
 			Assert.fail("Failure of testing getDueTime");
 		} catch (NullPointerException e) {
 			
 		}
-		t.setDueTime(time.format(df));
+		t.setDueTime(time);
 		Assert.assertTrue(t.getDueTime().equals(time));
 	}
 	
 	@Test
 	public void testSetTaskId() {
-		Task t = new Task();
 		thrown.expect(IllegalArgumentException.class);
 		t.setTaskId(-3);
 	}
 	
 	@Test
 	public void testGetTaskId() {
-		Task t = new Task();
 		try {
 			t.getTaskId();
 			Assert.fail("Failure of testing getTaskId");

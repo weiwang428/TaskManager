@@ -3,7 +3,6 @@ package wei.task;
 import java.lang.NullPointerException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.lang.IllegalArgumentException;
 
 /**
@@ -147,25 +146,19 @@ public class Task implements Serializable {
 	/**
 	 * Set dueTime of the task.
 	 *
-	 * @param dueTime A properly format String which will be set as due time, format
-	 *                has to be: "yyyy-MM-dd HH:mm:ss"
-	 * @throws IllegalArgumentException if the specified String format is invalid or
-	 *                                  the new time is smaller than the Task's
-	 *                                  create time.
+	 * @param dueTime new due time of the task
+	 * @throws IllegalArgumentException if the new due time is null or the new due 
+	 *                                  time is before the Task's create time.
+	 *                                  
 	 */
-	public void setDueTime(String dueTime) throws IllegalArgumentException {
+	public void setDueTime(LocalDateTime dueTime) throws IllegalArgumentException {
 		if (dueTime == null)
 			throw new IllegalArgumentException("dueTime can not be null!");
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		try {
-			this.dueTime = LocalDateTime.parse(dueTime, df);
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Due time format is invalid!");
-		}
 		// Make sure the due time is later than the creation time of the task.
-		if (this.dueTime.compareTo(this.creatTime) < 0) {
-			throw new IllegalArgumentException("Due time should later than create time!");
+		if (dueTime.compareTo(this.creatTime) < 0) {
+			throw new IllegalArgumentException("Due time should be later than create time!");
 		}
+		this.dueTime = dueTime;	
 	}
 
 	/**
