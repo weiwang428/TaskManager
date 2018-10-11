@@ -38,16 +38,18 @@ public class TaskManager {
 	/**
 	 * The addTask method enables user to add tasks to the TaskManager.
 	 * 
-	 * @param task A new task to be added, if the task is null, nothing will be
+	 * @param task A new {@link Task} to be added, if the task is null, nothing will be
 	 *             added
-	 * @see Task
+	 * @return  {@code true} when add succeed, otherwise {@code false}
 	 * 
 	 */
-	public void addTask(Task task) {
+	public boolean addTask(Task task) {
 		if (task != null) {
 			task.setTaskId(taskCounter++);
 			taskList.add(task);
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -69,7 +71,11 @@ public class TaskManager {
 	public void printProjectNames() {
 		if (taskList.size() > 0) {
 			System.out.print("The current available project names are: ");
-			System.out.println(taskList.stream().map(t -> t.getProject()).distinct().collect(Collectors.joining(", ")));
+			System.out.println(taskList
+										.stream()
+										.map(t -> t.getProject())
+										.distinct()
+										.collect(Collectors.joining(", ")));
 		}
 	}
 
@@ -100,19 +106,20 @@ public class TaskManager {
 
 	/**
 	 * The removeTask method enables user to remove a task from the TaskManager with
-	 * a given task id, if no task is found with the given task id, then a prompt
-	 * will be printed to the user.
+	 * a given task id.
 	 *
 	 * @param inputId the task id which user want to remove.
+	 * 
+	 * @return  {@code true} when remove succeed, otherwise {@code false}
 	 */
-	public void removeTask(int inputId) {
+	public boolean removeTask(int inputId) {
 		for (Task t : taskList) {
 			if (t.getTaskId() == inputId) {
 				taskList.remove(t);
-				return;
+				return true;
 			}
 		}
-		System.out.println("there is no such a task");
+		return false;
 	}
 
 	/**
@@ -127,6 +134,8 @@ public class TaskManager {
 	public boolean loadTaskListFromFile(String fileName) throws IOException {
 		// use java Serializable to implement reading objects from a binary file.
 		ObjectInputStream objReader = null;
+		if (fileName == null)
+			return false;
 		try {
 			objReader = new ObjectInputStream(new FileInputStream(fileName));
 			// Clear all the current tasks from the list.
@@ -151,8 +160,12 @@ public class TaskManager {
 		}
 		// Always put the task_counter to the maximum task id which we load from the
 		// file, and then increment it to hold the next task id.
-		taskCounter = taskList.size() > 0
-				? taskList.stream().mapToInt(t -> t.getTaskId()).max().orElseThrow(NoSuchElementException::new)
+		taskCounter = (taskList.size() > 0)
+				? taskList
+						.stream()
+						.mapToInt(t -> t.getTaskId())
+						.max()
+						.orElseThrow(NoSuchElementException::new)
 				: -1;
 		taskCounter++;
 		return true;
@@ -169,6 +182,8 @@ public class TaskManager {
 	 */
 	public boolean SaveTaskListToFile(String fileName) throws IOException {
 		ObjectOutputStream objWriter = null;
+		if (fileName == null)
+			return false;
 		try {
 			objWriter = new ObjectOutputStream(new FileOutputStream(fileName));
 			for (Task t : taskList) {
@@ -212,7 +227,12 @@ public class TaskManager {
 	 * 
 	 */
 	public int getUndoTaskNum() {
-		return (int) taskList.stream().filter(t -> t.getStatus().toLowerCase().compareTo("undo") == 0).count();
+		return (int) taskList
+				.stream()
+				.filter(t -> t.getStatus()
+						.toLowerCase()
+						.equals("undo"))
+				.count();
 	}
 
 	/**
@@ -222,7 +242,12 @@ public class TaskManager {
 	 * 
 	 */
 	public int getDoneTaskNum() {
-		return (int) taskList.stream().filter(t -> t.getStatus().toLowerCase().compareTo("done") == 0).count();
+		return (int) taskList
+				.stream()
+				.filter( t -> t.getStatus()
+						.toLowerCase()
+						.equals("done"))
+				.count();
 	}
 
 	/**
@@ -231,6 +256,7 @@ public class TaskManager {
 	 * @param task Task which the user wants to print
 	 */
 	private void printTask(Task task) {
+		
 		// Use a proper format to output the date/time information of the Task.
 		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		System.out.println("-----------------------------------------------");
@@ -241,5 +267,23 @@ public class TaskManager {
 		System.out.println("task create time: " + task.getCreatTime().format(df));
 		System.out.println("task due time: " + task.getDueTime().format(df));
 		System.out.println("-----------------------------------------------\n");
+	}
+	
+	/**
+	 * This method checks if the current task list is empty or not.
+	 * 
+	 * @return {@code true} when task list is empty, otherwise {@code false}
+	 */
+	public boolean isEmpty() {
+		return this.taskList.isEmpty();
+	}
+	
+	/**
+	 * Return the size of the current task list.
+	 * 
+	 * @return size of the task list
+	 */
+	public int size() {
+		return this.taskList.size();
 	}
 }

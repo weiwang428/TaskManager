@@ -1,5 +1,7 @@
 package wei.task;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 /**
@@ -72,17 +74,22 @@ public class Controller {
 	}
 
 	private boolean updateDueTime(Task tempTask) {
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		System.out.print("Please input due time, format like \"2018-09-28 17:07:05\": ");
-		String line = reader.nextLine();
 		try {
-			tempTask.setDueTime(line);
+			LocalDateTime dueTime = LocalDateTime.parse(reader.nextLine(), df);
+			tempTask.setDueTime(dueTime);
 			return true;
-		} catch (Exception e) {
+		} catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
+		catch (Exception e) {
+			System.out.println("Due time format is invalid!");
+			return false;
+		}
 	}
-
+	
 	/**
 	 * Get an integer from the user, if the input is invalid, continuously reading
 	 * until user input a legal integer.
