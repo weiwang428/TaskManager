@@ -148,25 +148,25 @@ public class Controller {
 		}
 		System.out.print("Do you want to edit task name? yes/no: ");
 		line = reader.nextLine();
-		if (line.toLowerCase().equals("yes")) {
+		if (line.toLowerCase().trim().equals("yes")) {
 			while (!updateTaskName(task))
 				;
 		}
 		System.out.print("Do you want to edit project name? yes/no: ");
 		line = reader.nextLine();
-		if (line.toLowerCase().equals("yes")) {
+		if (line.toLowerCase().trim().equals("yes")) {
 			while (!updateProjectName(task))
 				;
 		}
 		System.out.print("Do you want to edit task status? yes/no: ");
 		line = reader.nextLine();
-		if (line.toLowerCase().equals("yes")) {
+		if (line.toLowerCase().trim().equals("yes")) {
 			while (!updateStatus(task))
 				;
 		}
 		System.out.print("Do you want to edit due time? yes/no: ");
 		line = reader.nextLine();
-		if (line.equals("yes")) {
+		if (line.trim().equals("yes")) {
 			while (!updateDueTime(task))
 				;
 		}
@@ -179,7 +179,12 @@ public class Controller {
 	 */
 	public void removeTask() {
 		int inputId = getInt("Please input the task ID which you want to remove: ", "Task id needs to be an integer!");
-		taskMng.removeTask(inputId);
+		if(taskMng.removeTask(inputId)){
+			System.out.println("Delete successfully!");
+		}
+		else {
+			System.out.println("Error occurs during deleting!");
+		}
 	}
 
 	/**
@@ -188,10 +193,17 @@ public class Controller {
 	 *
 	 */
 	public void filterAProject() {
+		if(taskMng.size() >0 )
+			taskMng.printProjectNames();
 		String project;
 		System.out.print("Please input the project name you want to filter: ");
 		project = reader.nextLine();
+		if(project != null && !project.trim().isEmpty()) {
 		taskMng.printTaskByFilterProject(project);
+		}
+		else {
+			System.out.println("Project name can not be null or space!");
+		}
 	}
 
 	/**
